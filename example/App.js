@@ -33,14 +33,16 @@ const ListItem = ({ name, useContextTrigger }) => {
 
 function App() {
   const [
+    bindMenu,
+    bindMenuItem,
     useContextTrigger,
-    { data, coords, bindMenu, hideMenu },
-    bindMenuItem
+    { data, coords, setVisible }
   ] = useContextMenu();
   const [bindTrigger] = useContextTrigger({
     collect: () => "Title"
   });
   const [clickedCmd, setClickedCmd] = useState();
+  const hideMenu = () => setVisible(false);
   return (
     <div className="App">
       <h1 {...bindTrigger}>useContextMenu</h1>

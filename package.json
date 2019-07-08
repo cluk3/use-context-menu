@@ -1,6 +1,6 @@
 {
-  "name": "use-context-menu",
-  "version": "0.0.1",
+  "name": "react-use-context-menu",
+  "version": "0.1.1",
   "description": "React hook for managing custom context menus!",
   "main": "dist/use-context-menu.js",
   "umd:main": "dist/react-hooks-lib.umd.js",

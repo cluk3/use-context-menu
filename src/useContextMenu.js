@@ -5,13 +5,13 @@ import {
   useEffect,
   useCallback
 } from "react";
-import { getMenuPosition } from "./helpers";
+import { getMenuPosition, getRTLMenuPosition } from "./helpers";
 import buildUseContextMenuTrigger from "./buildUseContextMenuTrigger";
 
 const ESCAPE = 27;
 const baseStyles = { position: "fixed", opacity: 0, pointerEvents: "none" };
 const focusElement = el => el.focus();
-const useContextMenu = ({ handleElementSelect = focusElement } = {}) => {
+const useContextMenu = ({ rtl, handleElementSelect = focusElement } = {}) => {
   const menuRef = useRef();
   const selectables = useRef([]);
   const [style, setStyles] = useState(baseStyles);
@@ -89,7 +89,9 @@ const useContextMenu = ({ handleElementSelect = focusElement } = {}) => {
   useLayoutEffect(() => {
     if (isVisible) {
       const rect = menuRef.current.getBoundingClientRect();
-      const { top, left } = getMenuPosition(rect, coords);
+      const { top, left } = rtl
+        ? getRTLMenuPosition(rect, coords)
+        : getMenuPosition(rect, coords);
       setStyles(st => ({
         ...st,
         top: `${top}px`,
@@ -103,13 +105,21 @@ const useContextMenu = ({ handleElementSelect = focusElement } = {}) => {
   }, [menuRef, isVisible, coords]);
 
   const bindMenu = { style, ref: menuRef, role: "menu", tabIndex: -1 };
+  const bindMenuItems = {
+    ref: markSelectable,
+    role: "menuitem",
+    tabIndex: -1
+  };
   return [
+    bindMenu,
+    bindMenuItems,
     buildUseContextMenuTrigger(triggerVisible, setCoords),
-    { data: collectedData, isVisible, coords, bindMenu, hideMenu },
     {
-      ref: markSelectable,
-      role: "menuitem",
-      tabIndex: -1
+      data: collectedData,
+      isVisible,
+      setVisible,
+      coords,
+      setCoords
     }
   ];
 };
