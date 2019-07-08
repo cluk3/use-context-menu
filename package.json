@@ -1,0 +1,31 @@
+{
+  "name": "use-contextmenu",
+  "version": "0.0.1",
+  "description": "React hook for managing custom context menus!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": "> 4",
+    "npm": "> 3"
+  },
+  "files": [
+    "dist"
+  ],
+  "peerDependencies": {
+    "react": ">=16.8"
+  },
+  "keywords": [
+    "react",
+    "hook",
+    "contextmenu"
+  ],
+  "author": "Luca Campli campli.luca@gmail.com",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^24.8.0",
+    "np": "^5.0.3",
+    "rollup": "^1.16.6"
+  }
+}
