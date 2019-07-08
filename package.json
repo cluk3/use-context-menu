@@ -37,5 +37,13 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cluk3/use-context-menu.git"
+  },
+  "bugs": {
+    "url": "https://github.com/cluk3/use-context-menu/issues"
+  },
+  "homepage": "https://github.com/cluk3/use-context-menu#readme"
 }
