@@ -1,3 +1,12 @@
+---
+name: Bug report
+about: Create a report to help us improve
+title: ''
+labels: ''
+assignees: ''
+
+---
+
 <!--
 Thanks for your interest in the project. I appreciate bugs filed and PRs submitted!
 Please make sure that you are familiar with and follow the Code of Conduct for
@@ -7,7 +16,7 @@ Please fill out this template with all the relevant information so we can
 understand what's going on and fix the issue.
 -->
 
-- `use-context-menu` version:
+- `react-use-context-menu` version:
 - `node` version:
 - `npm` (or `yarn`) version:
 
