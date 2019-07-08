@@ -1,10 +1,16 @@
 {
-  "name": "use-contextmenu",
+  "name": "use-context-menu",
   "version": "0.0.1",
   "description": "React hook for managing custom context menus!",
-  "main": "index.js",
+  "main": "dist/use-context-menu.js",
+  "umd:main": "dist/react-hooks-lib.umd.js",
+  "module": "dist/use-context-menu.m.js",
+  "source": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "example": "parcel ./example/index.html --out-dir exampleDist",
+    "build": "microbundle -o dist/ --sourcemap false --compress false",
+    "dev": "microbundle watch -o dist/ --sourcemap false --compress false"
   },
   "engines": {
     "node": "> 4",
@@ -25,7 +31,11 @@
   "license": "MIT",
   "devDependencies": {
     "jest": "^24.8.0",
+    "microbundle": "^0.11.0",
     "np": "^5.0.3",
-    "rollup": "^1.16.6"
-  }
+    "parcel-bundler": "^1.12.3",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
+  },
+  "dependencies": {}
 }

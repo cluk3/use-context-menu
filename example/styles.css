@@ -1,0 +1,24 @@
+.App {
+    font-family: sans-serif;
+    text-align: center;
+    height: 110vh;
+  }
+  
+  .menu {
+    background-color: blueviolet;
+    color: white;
+    box-shadow: 0 3px 6px rgba(91, 65, 209, 0.16),
+      0 3px 6px rgba(91, 65, 209, 0.23);
+    padding: 0 2em 0 2em;
+    text-align: left;
+  }
+  
+  .menu > [role="menuitem"] {
+    cursor: pointer;
+  }
+  
+  html {
+    background-color: cornflowerblue;
+    color: white;
+  }
+  

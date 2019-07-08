@@ -1,4 +1,6 @@
 /node_modules
 /dist
+/exampleDist
 .DS_Store
 npm-debug.log*
+.cache
