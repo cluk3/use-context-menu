@@ -13,8 +13,7 @@
 - [Features](#features)
 - [Usage](#usage)
 - [API](#api)
-- [Examples](#example)
-- [LICENSE](#license)
+- [Examples](#examples)
 
 ## Installation
 
@@ -31,7 +30,7 @@ or
 yarn add react-use-context-menu
 ```
 
-##Features
+## Features
 
  - Supports Keyboard navigation
  - Fully customizable
@@ -146,10 +145,6 @@ const [bindTrigger] = useContextTrigger({
 
 You can check the example folder or [this codesandbox][codesandbox-example] for more advanced examples.
 
-## LICENSE
-
-MIT
-
 ## Comparison with other similar packages
 
 This is the first package implemented using hooks so far for what I've seen!
@@ -162,3 +157,7 @@ This package have been deeply inspired by https://github.com/vkbansal/react-cont
 [npm]: https://www.npmjs.com/
 [node]: https://nodejs.org
 [codesandbox-example]: https://codesandbox.io/s/hopeful-hopper-v4zzv?fontsize=14
+
+## LICENSE
+
+MIT
