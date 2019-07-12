@@ -15,7 +15,7 @@ const defaultConfig = {
   collect() {}
 };
 
-export default function buildUseContextMenuTrigger(triggerVisible, setCoords) {
+export default function buildUseContextMenuTrigger(triggerVisible) {
   return _config => {
     const config = Object.assign({}, defaultConfig, _config);
     const touchHandled = useRef(false);
@@ -29,8 +29,7 @@ export default function buildUseContextMenuTrigger(triggerVisible, setCoords) {
       event.preventDefault();
       event.stopPropagation();
 
-      setCoords(getCoords(event, config));
-      triggerVisible(config.collect());
+      triggerVisible(getCoords(event, config), config.collect());
     };
 
     const handleMouseDown = event => {

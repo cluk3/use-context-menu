@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`useContextMenu result is correct 1`] = `
+Array [
+  Object {
+    "ref": Object {
+      "current": undefined,
+    },
+    "role": "menu",
+    "style": Object {
+      "opacity": 0,
+      "pointerEvents": "none",
+      "position": "fixed",
+    },
+    "tabIndex": -1,
+  },
+  Object {
+    "ref": [Function],
+    "role": "menuitem",
+    "tabIndex": -1,
+  },
+  [Function],
+  Object {
+    "coords": Array [
+      0,
+      0,
+    ],
+    "data": undefined,
+    "isVisible": false,
+    "setCoords": [Function],
+    "setVisible": [Function],
+  },
+]
+`;

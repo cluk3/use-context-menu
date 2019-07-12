@@ -8,8 +8,17 @@ import {
 import { getMenuPosition, getRTLMenuPosition } from "./helpers";
 import buildUseContextMenuTrigger from "./buildUseContextMenuTrigger";
 
-const ESCAPE = 27;
-const baseStyles = { position: "fixed", opacity: 0, pointerEvents: "none" };
+export const keyCodes = {
+  ESCAPE: 27,
+  ENTER: 13,
+  UP_ARROW: 38,
+  DOWN_ARROW: 40
+};
+const baseStyles = {
+  position: "fixed",
+  opacity: 0,
+  pointerEvents: "none"
+};
 const focusElement = el => el.focus();
 const useContextMenu = ({ rtl, handleElementSelect = focusElement } = {}) => {
   const menuRef = useRef();
@@ -17,12 +26,13 @@ const useContextMenu = ({ rtl, handleElementSelect = focusElement } = {}) => {
   const [style, setStyles] = useState(baseStyles);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [isVisible, setVisible] = useState(false);
-  const [coords, setCoords] = useState();
+  const [coords, setCoords] = useState([0, 0]);
   const [collectedData, setCollectedData] = useState();
   const hideMenu = useCallback(() => setVisible(false), [setVisible]);
   const triggerVisible = useCallback(
-    data => {
+    (coords, data) => {
       setVisible(true);
+      setCoords(coords);
       setCollectedData(data);
     },
     [setVisible, setCollectedData]
@@ -37,26 +47,28 @@ const useContextMenu = ({ rtl, handleElementSelect = focusElement } = {}) => {
     };
     const handleKeyNavigation = e => {
       switch (e.keyCode) {
-        case ESCAPE:
+        case keyCodes.ESCAPE:
           e.preventDefault();
           hideMenu();
           break;
-        case 38: // up arrow
+        case keyCodes.UP_ARROW:
           e.preventDefault();
           if (selectedIndex > 0) {
             setSelectedIndex(s => s - 1);
             handleElementSelect(selectables.current[selectedIndex - 1]);
           }
           break;
-        case 40: // down arrow
+        case keyCodes.DOWN_ARROW:
           e.preventDefault();
           if (selectedIndex + 1 < selectables.current.length) {
             setSelectedIndex(s => s + 1);
             handleElementSelect(selectables.current[selectedIndex + 1]);
           }
           break;
-        case 13: // enter
-          selectables.current[selectedIndex].click();
+        case keyCodes.ENTER:
+          if (selectedIndex !== -1) {
+            selectables.current[selectedIndex].click();
+          }
           hideMenu();
           break;
         default:
