@@ -29,17 +29,17 @@
   "author": "Luca Campli campli.luca@gmail.com",
   "license": "MIT",
   "devDependencies": {
-    "@babel/core": "^7.5.4",
-    "@babel/preset-env": "^7.5.4",
+    "@babel/core": "^7.8.7",
+    "@babel/preset-env": "^7.8.7",
     "@testing-library/react-hooks": "^1.1.0",
-    "babel-jest": "^24.8.0",
-    "jest": "^24.8.0",
+    "babel-jest": "^24.9.0",
+    "jest": "^24.9.0",
     "microbundle": "^0.11.0",
-    "np": "^5.0.3",
-    "parcel-bundler": "^1.12.3",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "react-test-renderer": "^16.8.6"
+    "np": "^5.2.1",
+    "parcel-bundler": "^1.12.4",
+    "react": "^16.13.0",
+    "react-dom": "^16.13.0",
+    "react-test-renderer": "^16.13.0"
   },
   "dependencies": {},
   "repository": {
