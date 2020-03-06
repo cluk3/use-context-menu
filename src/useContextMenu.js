@@ -43,7 +43,10 @@ const useContextMenu = ({ rtl, handleElementSelect = focusElement } = {}) => {
 
   useEffect(() => {
     const handleOutsideClick = e => {
-      !menuRef.current.contains(e.target) && hideMenu();
+      if (!menuRef.current.contains(e.target)) {
+        setSelectedIndex(-1);
+        hideMenu();
+      }
     };
     const handleKeyNavigation = e => {
       switch (e.keyCode) {

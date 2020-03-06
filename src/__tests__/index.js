@@ -218,3 +218,49 @@ test("useContextMenu hides the menu on ENTER key press", () => {
 
   expect(result.current[3].isVisible).toEqual(false);
 });
+
+test("useContextMenu index of item selected by keyboard gets reset when closing the menu", () => {
+  let selectedEl = 0;
+  const { result } = renderHook(() =>
+    useContextMenu({
+      handleElementSelect: _selectedEl => (selectedEl = _selectedEl)
+    })
+  );
+
+  result.current[0].ref.current = {
+    getBoundingClientRect: jest.fn(() => ({ height: 100, width: 100 })),
+    contains: () => false
+  };
+
+  result.current[1].ref(1);
+  result.current[1].ref(2);
+  result.current[1].ref(3);
+
+  act(() => {
+    result.current[3].setVisible(true);
+  });
+
+  act(() => {
+    const event = new KeyboardEvent("keydown", { keyCode: 40 });
+
+    document.dispatchEvent(event);
+  });
+
+  act(() => {
+    const event = new MouseEvent("touchstart");
+
+    document.dispatchEvent(event);
+  });
+
+  act(() => {
+    result.current[3].setVisible(true);
+  });
+
+  act(() => {
+    const event = new KeyboardEvent("keydown", { keyCode: 40 });
+
+    document.dispatchEvent(event);
+  });
+
+  expect(selectedEl).toEqual(1);
+});
