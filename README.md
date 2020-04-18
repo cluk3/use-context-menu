@@ -1,7 +1,7 @@
 <div align="center">
 <h1>use-context-menu</h1>
 
-<p>A React hook for easily creating custom Context Menus! The hooks takes care of the logic and creating the a11y attributes, you take care of the UI!</p>
+<p>A React hook for easily creating custom Context Menus! The hooks take care of the logic and creating the a11y attributes, you take care of the UI!</p>
 
 </div>
 
