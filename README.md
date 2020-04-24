@@ -1,5 +1,5 @@
 <div align="center">
-<h1>use-context-menu</h1>
+<h1>react-use-context-menu</h1>
 
 <p>A React hook for easily creating custom Context Menus! The hooks take care of the logic and creating the a11y attributes, you take care of the UI!</p>
 
@@ -57,7 +57,7 @@ function App() {
     bindMenuItems,
     useContextTrigger
   ] = useContextMenu();
-  const [bindTrigger] = useContextTrigger(});
+  const [bindTrigger] = useContextTrigger({});
   return (
     <div className="App">
       <h1>useContextMenu</h1>
@@ -101,7 +101,7 @@ It has 4 properties:
     style, // Mandatory
     ref, // Mandatory
     role: "menu", // Optional, if you don't care about a11y 😠
-    tabIndex: -1 // same as above, also this is needed for keayboard navigation
+    tabIndex: -1 // same as above, also this is needed for keyboard navigation
 }
 ```
 Keep in mind that you need to spread this over an actual element (like a div or a nav), if you spread it to a Component, then the Component should take care of passing the props to the underlying wrapper element.
@@ -109,7 +109,7 @@ If you as well need to access the ref of the element you can simply do:
 ```jsx
 <div {...bindMenu} ref={(el) => {
     bindMenu.ref(el);
-    // you logic here
+    // put your code here
 }}
 ```
 
@@ -120,7 +120,7 @@ The second element is an Object with 3 props:
 {
     ref, // Mandatory
     role: "menuitem", // Optional, if you don't care about a11y 😠
-    tabIndex: -1 // same as above, also this is needed for keayboard navigation
+    tabIndex: -1 // same as above, also this is needed for kayboard navigation
 }
 ```
 used to bind the menu items. You can spread it or assign the props one by one. Same as above applies.
