@@ -14,7 +14,7 @@ test("useContextMenu register event listeners only when visible", () => {
   const { result } = renderHook(() => useContextMenu());
 
   result.current[0].ref.current = {
-    getBoundingClientRect: jest.fn(() => ({ height: 100, width: 100 }))
+    getBoundingClientRect: jest.fn(() => ({ height: 100, width: 100 })),
   };
 
   expect(addEventListener).not.toHaveBeenCalled();
@@ -25,12 +25,12 @@ test("useContextMenu register event listeners only when visible", () => {
   });
 
   expect(addEventListener).toHaveBeenCalledTimes(5);
-  expect(addEventListener.mock.calls.map(call => call[0])).toEqual([
+  expect(addEventListener.mock.calls.map((call) => call[0])).toEqual([
     "mousedown",
     "touchstart",
     "scroll",
     "contextmenu",
-    "keydown"
+    "keydown",
   ]);
 });
 
@@ -38,13 +38,13 @@ test("useContextMenu sets correctly the style when changing visibility", () => {
   const { result } = renderHook(() => useContextMenu());
 
   result.current[0].ref.current = {
-    getBoundingClientRect: jest.fn(() => ({ height: 100, width: 100 }))
+    getBoundingClientRect: jest.fn(() => ({ height: 100, width: 100 })),
   };
 
   expect(result.current[0].style).toEqual({
     opacity: 0,
     pointerEvents: "none",
-    position: "fixed"
+    position: "fixed",
   });
 
   act(() => {
@@ -57,7 +57,7 @@ test("useContextMenu sets correctly the style when changing visibility", () => {
     opacity: 1,
     pointerEvents: "auto",
     position: "fixed",
-    top: "100px"
+    top: "100px",
   });
 
   act(() => {
@@ -67,7 +67,7 @@ test("useContextMenu sets correctly the style when changing visibility", () => {
   expect(result.current[0].style).toEqual({
     opacity: 0,
     pointerEvents: "none",
-    position: "fixed"
+    position: "fixed",
   });
 });
 
@@ -75,13 +75,13 @@ test("useContextMenu keeps the menu inside the viewport", () => {
   const { result } = renderHook(() => useContextMenu());
 
   result.current[0].ref.current = {
-    getBoundingClientRect: jest.fn(() => ({ height: 100, width: 100 }))
+    getBoundingClientRect: jest.fn(() => ({ height: 100, width: 100 })),
   };
 
   expect(result.current[0].style).toEqual({
     opacity: 0,
     pointerEvents: "none",
-    position: "fixed"
+    position: "fixed",
   });
 
   act(() => {
@@ -94,7 +94,7 @@ test("useContextMenu keeps the menu inside the viewport", () => {
     opacity: 1,
     pointerEvents: "auto",
     position: "fixed",
-    top: "600px"
+    top: "600px",
   });
 });
 
@@ -102,7 +102,7 @@ test("useContextMenu hides the menu when a new contextmenu event is triggered", 
   const { result } = renderHook(() => useContextMenu());
 
   result.current[0].ref.current = {
-    getBoundingClientRect: jest.fn(() => ({ height: 100, width: 100 }))
+    getBoundingClientRect: jest.fn(() => ({ height: 100, width: 100 })),
   };
 
   act(() => {
@@ -123,7 +123,7 @@ test("useContextMenu hides the menu when clicking outside", () => {
 
   result.current[0].ref.current = {
     getBoundingClientRect: jest.fn(() => ({ height: 100, width: 100 })),
-    contains: () => false
+    contains: () => false,
   };
 
   act(() => {
@@ -139,12 +139,12 @@ test("useContextMenu hides the menu when clicking outside", () => {
   expect(result.current[3].isVisible).toEqual(false);
 });
 
-test("useContextMenu hides the menu when clicking outside", () => {
+test("useContextMenu hides the menu when touching outside", () => {
   const { result } = renderHook(() => useContextMenu());
 
   result.current[0].ref.current = {
     getBoundingClientRect: jest.fn(() => ({ height: 100, width: 100 })),
-    contains: () => false
+    contains: () => false,
   };
 
   act(() => {
@@ -165,7 +165,7 @@ test("useContextMenu hides the menu on scroll", () => {
 
   result.current[0].ref.current = {
     getBoundingClientRect: jest.fn(() => ({ height: 100, width: 100 })),
-    contains: () => false
+    contains: () => false,
   };
 
   act(() => {
@@ -184,7 +184,7 @@ test("useContextMenu hides the menu on ESCAPE key press", () => {
 
   result.current[0].ref.current = {
     getBoundingClientRect: jest.fn(() => ({ height: 100, width: 100 })),
-    contains: () => false
+    contains: () => false,
   };
 
   act(() => {
@@ -204,7 +204,7 @@ test("useContextMenu hides the menu on ENTER key press", () => {
 
   result.current[0].ref.current = {
     getBoundingClientRect: jest.fn(() => ({ height: 100, width: 100 })),
-    contains: () => false
+    contains: () => false,
   };
 
   act(() => {
@@ -223,13 +223,13 @@ test("useContextMenu index of item selected by keyboard gets reset when closing 
   let selectedEl = 0;
   const { result } = renderHook(() =>
     useContextMenu({
-      handleElementSelect: _selectedEl => (selectedEl = _selectedEl)
+      handleElementSelect: (_selectedEl) => (selectedEl = _selectedEl),
     })
   );
 
   result.current[0].ref.current = {
     getBoundingClientRect: jest.fn(() => ({ height: 100, width: 100 })),
-    contains: () => false
+    contains: () => false,
   };
 
   result.current[1].ref(1);
