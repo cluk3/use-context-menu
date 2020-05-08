@@ -20,27 +20,27 @@
 This module is distributed via [npm][npm] which is bundled with [node][node] and
 should be installed as one of your project's `dependencies`:
 
-```
+```sh
 npm install --save react-use-context-menu
 ```
 
 or
 
-```
+```sh
 yarn add react-use-context-menu
 ```
 
 ## Features
 
- - Supports Keyboard navigation
- - Fully customizable
- - Fully accessible
- - No dependencies
- - Only 1kb gzipped
- - RTL support
- - supports touch screen with hold to display!
- - Detects the size of the menu and always places it inside the viewport when clicking near the borders.
- - ESM and CommonJS dist
+- Supports Keyboard navigation
+- Fully customizable
+- Fully accessible
+- No dependencies
+- Only 1kb gzipped
+- RTL support
+- supports touch screen with hold to display!
+- Detects the size of the menu and always places it inside the viewport when clicking near the borders.
+- ESM and CommonJS dist
 
 ## Usage
 
@@ -94,8 +94,10 @@ const [
 ```
 
 ### bindMenu
+
 The first element of the result array is an Object used to bind the context menu element.
 It has 4 properties:
+
 ```js
 {
     style, // Mandatory
@@ -104,9 +106,12 @@ It has 4 properties:
     tabIndex: -1 // same as above, also this is needed for keyboard navigation
 }
 ```
+
 Keep in mind that you need to spread this over an actual element (like a div or a nav), if you spread it to a Component, then the Component should take care of passing the props to the underlying wrapper element.
 If you as well need to access the ref of the element you can simply do:
+
 ```jsx
+
 <div {...bindMenu} ref={(el) => {
     bindMenu.ref(el);
     // put your code here
@@ -116,21 +121,25 @@ If you as well need to access the ref of the element you can simply do:
 ### bindMenuItems
 
 The second element is an Object with 3 props:
+
 ```js
 {
     ref, // Mandatory
     role: "menuitem", // Optional, if you don't care about a11y 😠
-    tabIndex: -1 // same as above, also this is needed for kayboard navigation
+    tabIndex: -1 // same as above, also this is needed for keyboard navigation
 }
 ```
+
 used to bind the menu items. You can spread it or assign the props one by one. Same as above applies.
 
 ### useContextTrigger
+
 The third element of the result array is another hook which you should use to bind the trigger component(s), which is the component which will trigger the context menu when right clicked.
 It accepts an optional config object for fine tuning and advanced usage
+
 ```js
 const [bindTrigger] = useContextTrigger({
-// those are the default values 
+// those are the default values
   disable: false, // disable the trigger
   holdToDisplay: 1000, // time in ms after which the context menu will appear when holding the touch
   posX: 0, // distance in pixel from which the context menu will appear related to the right click X coord
@@ -141,7 +150,7 @@ const [bindTrigger] = useContextTrigger({
 });
 ```
 
-## Examples:
+## Examples
 
 You can check the example folder or [this codesandbox][codesandbox-example] for more advanced examples.
 
@@ -152,6 +161,7 @@ Other packages are using components which requires lot of configuration and are 
 Also this is the smallest and most configurable 💃
 
 ## Gratitude
+
 This package have been deeply inspired by https://github.com/vkbansal/react-contextmenu, thanks a lot to @vkbansal! 🙏
 
 [npm]: https://www.npmjs.com/
