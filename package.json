@@ -35,7 +35,7 @@
     "babel-jest": "^24.9.0",
     "jest": "^24.9.0",
     "microbundle": "^0.11.0",
-    "np": "^5.2.1",
+    "np": "^6.2.3",
     "parcel-bundler": "^1.12.4",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
