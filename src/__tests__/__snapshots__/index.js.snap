@@ -1,18 +1,48 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`useContextMenu keeps the menu inside the viewport 1`] = `
+Object {
+  "left": 0,
+  "opacity": 0,
+  "pointerEvents": "none",
+  "position": "absolute",
+  "top": 0,
+  "transform": "translate3d(0,0,0)",
+  "userSelect": "none",
+}
+`;
+
+exports[`useContextMenu keeps the menu inside the viewport 2`] = `
+Object {
+  "left": 0,
+  "opacity": 1,
+  "pointerEvents": "auto",
+  "position": "absolute",
+  "top": 0,
+  "transform": "translate3d(900px, 600px, 0)",
+  "userSelect": "none",
+}
+`;
+
 exports[`useContextMenu result is correct 1`] = `
 Array [
   Object {
+    "aria-hidden": true,
+    "onContextMenu": [Function],
     "ref": Object {
       "current": undefined,
     },
     "role": "menu",
     "style": Object {
+      "left": 0,
       "opacity": 0,
       "pointerEvents": "none",
-      "position": "fixed",
+      "position": "absolute",
+      "top": 0,
+      "transform": "translate3d(0,0,0)",
+      "userSelect": "none",
     },
-    "tabIndex": -1,
+    "tabIndex": 0,
   },
   Object {
     "ref": [Function],
@@ -26,9 +56,79 @@ Array [
       0,
     ],
     "data": undefined,
+    "hideMenu": [Function],
     "isVisible": false,
     "setCoords": [Function],
     "setVisible": [Function],
   },
+]
+`;
+
+exports[`useContextMenu sets correctly the style when changing visibility 1`] = `
+Object {
+  "left": 0,
+  "opacity": 0,
+  "pointerEvents": "none",
+  "position": "absolute",
+  "top": 0,
+  "transform": "translate3d(0,0,0)",
+  "userSelect": "none",
+}
+`;
+
+exports[`useContextMenu sets correctly the style when changing visibility 2`] = `
+Object {
+  "left": 0,
+  "opacity": 1,
+  "pointerEvents": "auto",
+  "position": "absolute",
+  "top": 0,
+  "transform": "translate3d(100px, 100px, 0)",
+  "userSelect": "none",
+}
+`;
+
+exports[`useContextMenu sets correctly the style when changing visibility 3`] = `
+Object {
+  "left": 0,
+  "opacity": 0,
+  "pointerEvents": "none",
+  "position": "absolute",
+  "top": 0,
+  "transform": "translate3d(0,0,0)",
+  "userSelect": "none",
+}
+`;
+
+exports[`useContextTrigger matches snapshot when giving no config 1`] = `
+Array [
+  Object {
+    "onContextMenu": [Function],
+  },
+  [Function],
+]
+`;
+
+exports[`useContextTrigger matches snapshot when setting mouse holdToDisplay 1`] = `
+Array [
+  Object {
+    "onContextMenu": [Function],
+    "onMouseDown": [Function],
+    "onMouseOut": [Function],
+    "onMouseUp": [Function],
+  },
+  [Function],
+]
+`;
+
+exports[`useContextTrigger matches snapshot when setting touch holdToDisplay 1`] = `
+Array [
+  Object {
+    "onContextMenu": [Function],
+    "onTouchCancel": [Function],
+    "onTouchEnd": [Function],
+    "onTouchStart": [Function],
+  },
+  [Function],
 ]
 `;
