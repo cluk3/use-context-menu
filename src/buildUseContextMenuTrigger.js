@@ -1,104 +1,128 @@
-import { useRef } from "react";
-import { getCoords } from "./helpers";
+import { useRef, useCallback } from "react";
+import { getCoords, isNumber } from "./helpers";
 
 const MOUSE_BUTTON = {
   LEFT: 0,
-  RIGHT: 2
+  RIGHT: 2,
 };
 const defaultConfig = {
+  collect() {},
   disable: false,
-  holdToDisplay: 1000,
+  disableIfShiftIsPressed: false,
+  holdToDisplay: {
+    mouse: false,
+    touch: false,
+  },
   posX: 0,
   posY: 0,
-  mouseButton: MOUSE_BUTTON.RIGHT,
-  disableIfShiftIsPressed: false,
-  collect() {}
 };
 
 export default function buildUseContextMenuTrigger(triggerVisible) {
-  return _config => {
+  return (_config = {}) => {
     const config = Object.assign({}, defaultConfig, _config);
+    const holdToDisplay = Object.assign(
+      {},
+      defaultConfig.holdToDisplay,
+      _config.holdToDisplay
+    );
     const touchHandled = useRef(false);
     const mouseDownTimeoutId = useRef();
     const touchstartTimeoutId = useRef();
 
-    const handleContextClick = event => {
-      if (config.disable) return;
-      if (config.disableIfShiftIsPressed && event.shiftKey) return;
+    const handleContextClick = useCallback(
+      (event) => {
+        if (config.disable) return;
+        if (config.disableIfShiftIsPressed && event.shiftKey) return;
 
-      event.preventDefault();
-      event.stopPropagation();
-
-      triggerVisible(getCoords(event, config), config.collect());
-    };
-
-    const handleMouseDown = event => {
-      if (config.holdToDisplay >= 0 && event.button === MOUSE_BUTTON.LEFT) {
-        event.persist();
+        if (event.cancelable) {
+          event.preventDefault();
+        }
         event.stopPropagation();
 
-        mouseDownTimeoutId.current = setTimeout(
-          () => handleContextClick(event),
-          config.holdToDisplay
-        );
-      }
-    };
+        triggerVisible(getCoords(event, config), config.collect());
+      },
+      [config]
+    );
 
-    const handleMouseUp = event => {
+    const handleMouseDown = useCallback(
+      (event) => {
+        if (
+          isNumber(holdToDisplay.mouse) &&
+          holdToDisplay.mouse >= 0 &&
+          event.button === MOUSE_BUTTON.LEFT
+        ) {
+          event.persist();
+          event.stopPropagation();
+
+          mouseDownTimeoutId.current = setTimeout(
+            () => handleContextClick(event),
+            holdToDisplay.mouse
+          );
+        }
+      },
+      [holdToDisplay, handleContextClick]
+    );
+
+    const handleMouseUp = useCallback((event) => {
       if (event.button === MOUSE_BUTTON.LEFT) {
         clearTimeout(mouseDownTimeoutId.current);
       }
-    };
+    }, []);
 
-    const handleMouseOut = event => {
-      if (event.button === MOUSE_BUTTON.LEFT) {
-        clearTimeout(mouseDownTimeoutId.current);
-      }
-    };
+    const handleTouchstart = useCallback(
+      (event) => {
+        touchHandled.current = false;
 
-    const handleTouchstart = event => {
-      touchHandled.current = false;
+        if (isNumber(holdToDisplay.touch) && holdToDisplay.touch >= 0) {
+          event.persist();
+          event.stopPropagation();
 
-      if (config.holdToDisplay >= 0) {
-        event.persist();
-        event.stopPropagation();
+          touchstartTimeoutId.current = setTimeout(() => {
+            handleContextClick(event);
+            touchHandled.current = true;
+          }, holdToDisplay.touch);
+        }
+      },
+      [handleContextClick, holdToDisplay.touch]
+    );
 
-        touchstartTimeoutId.current = setTimeout(() => {
-          handleContextClick(event);
-          touchHandled.current = true;
-        }, config.holdToDisplay);
-      }
-    };
-
-    const handleTouchEnd = event => {
-      if (touchHandled.current) {
+    const handleTouchEnd = useCallback((event) => {
+      if (touchHandled.current && event.cancelable) {
         event.preventDefault();
       }
       clearTimeout(touchstartTimeoutId.current);
-    };
+    }, []);
 
-    const handleContextMenu = event => {
-      if (event.button === config.mouseButton) {
-        handleContextClick(event);
-      }
-    };
-
-    const handleMouseClick = event => {
-      if (event.button === config.mouseButton) {
-        handleContextClick(event);
-      }
-    };
+    const handleContextMenu = useCallback(
+      (event) => {
+        if (touchstartTimeoutId.current && !config.disable) {
+          event.cancelable && event.preventDefault();
+        } else {
+          handleContextClick(event);
+        }
+      },
+      [handleContextClick, config.disable]
+    );
 
     const triggerBind = {
       onContextMenu: handleContextMenu,
-      onClick: handleMouseClick,
-      onMouseDown: handleMouseDown,
-      onMouseUp: handleMouseUp,
-      onTouchStart: handleTouchstart,
-      onTouchEnd: handleTouchEnd,
-      onMouseOut: handleMouseOut
     };
+    if (holdToDisplay.mouse !== false) {
+      Object.assign(triggerBind, {
+        onMouseDown: handleMouseDown,
+        onMouseUp: handleMouseUp,
+        onMouseOut: handleMouseUp,
+      });
+    }
+    if (holdToDisplay.touch !== false) {
+      Object.assign(triggerBind, {
+        onTouchStart: handleTouchstart,
+        onTouchEnd: handleTouchEnd,
+        onTouchCancel: handleTouchEnd,
+        onTouchMove: handleTouchEnd,
+      });
+    }
 
-    return [triggerBind];
+    return [triggerBind, handleContextClick];
   };
 }

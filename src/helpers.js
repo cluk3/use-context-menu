@@ -1,7 +1,7 @@
 export const getMenuPosition = (rect, [x, y]) => {
   const menuStyles = {
     top: y,
-    left: x
+    left: x,
   };
 
   const { innerWidth, innerHeight } = window;
@@ -30,7 +30,7 @@ export const getMenuPosition = (rect, [x, y]) => {
 export const getRTLMenuPosition = (rect, [x, y]) => {
   const menuStyles = {
     top: y,
-    left: x
+    left: x,
   };
 
   const { innerWidth, innerHeight } = window;
@@ -61,8 +61,10 @@ export const getRTLMenuPosition = (rect, [x, y]) => {
 
 export const getCoords = (event, config) =>
   ["X", "Y"].map(
-    axis =>
+    (axis) =>
       (event[`client${axis}`] ||
         (event.touches && event.touches[0][`page${axis}`])) -
       config[`pos${axis}`]
   );
+
+export const isNumber = (x) => typeof x === "number";
