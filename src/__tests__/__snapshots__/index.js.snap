@@ -127,6 +127,7 @@ Array [
     "onContextMenu": [Function],
     "onTouchCancel": [Function],
     "onTouchEnd": [Function],
+    "onTouchMove": [Function],
     "onTouchStart": [Function],
   },
   [Function],
