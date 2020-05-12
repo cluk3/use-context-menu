@@ -1,20 +1,21 @@
 import {
+  useCallback,
+  useEffect,
   useLayoutEffect,
   useRef,
   useState,
-  useEffect,
-  useCallback,
 } from "react";
 import { getMenuPosition, getRTLMenuPosition } from "./helpers";
 import buildUseContextMenuTrigger from "./buildUseContextMenuTrigger";
+import { Coords } from "./index.d";
 
-export const keyCodes = {
-  ESCAPE: 27,
-  ENTER: 13,
-  TAB: 9,
-  UP_ARROW: 38,
-  DOWN_ARROW: 40,
-};
+export enum keyCodes {
+  ESCAPE = 27,
+  ENTER = 13,
+  TAB = 9,
+  UP_ARROW = 38,
+  DOWN_ARROW = 40,
+}
 const baseStyles = {
   position: "absolute",
   opacity: 0,
@@ -25,28 +26,30 @@ const baseStyles = {
   transform: "translate3d(0,0,0)",
 };
 
-const focusElement = (el) => el.focus();
+const focusElement = (el: HTMLElement): void => el.focus();
 const useContextMenu = ({
-  rtl,
+  rtl = false,
   handleElementSelect = focusElement,
   hideOnScroll = false,
 } = {}) => {
-  const menuRef = useRef();
-  const selectables = useRef([]);
+  const menuRef = useRef<HTMLElement>();
+  const selectables = useRef<HTMLElement[]>([]);
   // TODO: refactor with useReducer
   const [style, setStyles] = useState(baseStyles);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [isVisible, setVisible] = useState(false);
   const isVisibleRef = useRef(isVisible);
   isVisibleRef.current = isVisible;
-  const [coords, setCoords] = useState([0, 0]);
-  const [collectedData, setCollectedData] = useState();
+  const [coords, setCoords] = useState<[number, number]>([0, 0]);
+  const [collectedData, setCollectedData] = useState<unknown>();
+
   const hideMenu = useCallback(() => {
     setVisible(false);
     setSelectedIndex(-1);
   }, [setVisible, setSelectedIndex]);
+
   const triggerVisible = useCallback(
-    (coords, data) => {
+    (coords: Coords, data: unknown) => {
       setVisible(true);
       setCoords(coords);
       setCollectedData(data);
@@ -54,22 +57,22 @@ const useContextMenu = ({
     [setVisible, setCollectedData, setCoords]
   );
 
-  const markSelectable = (el) =>
+  const markSelectable = (el: HTMLElement): HTMLElement[] =>
     (selectables.current = el === null ? [] : [...selectables.current, el]);
 
   useEffect(() => {
-    const handleOutsideClick = (e) => {
+    const handleOutsideClick = (e: MouseEvent | TouchEvent): void => {
       if (
         isVisibleRef.current &&
         menuRef.current &&
-        !menuRef.current.contains(e.target)
+        !menuRef.current.contains(e.target as HTMLElement)
       ) {
         hideMenu();
         document.removeEventListener("mousedown", handleOutsideClick);
         document.removeEventListener("touchstart", handleOutsideClick);
       }
     };
-    const handleKeyNavigation = (e) => {
+    const handleKeyNavigation = (e: KeyboardEvent): void => {
       switch (e.keyCode) {
         case keyCodes.TAB:
           hideMenu();
@@ -116,7 +119,7 @@ const useContextMenu = ({
         });
       document.addEventListener("keydown", handleKeyNavigation);
     }
-    return () => {
+    return (): void => {
       document.removeEventListener("mousedown", handleOutsideClick);
       document.removeEventListener("touchstart", handleOutsideClick);
       document.removeEventListener("scroll", hideMenu);
@@ -135,7 +138,7 @@ const useContextMenu = ({
 
   useLayoutEffect(() => {
     if (isVisible) {
-      const rect = menuRef.current.getBoundingClientRect();
+      const rect = menuRef.current!.getBoundingClientRect();
       const { top, left } = rtl
         ? getRTLMenuPosition(rect, coords)
         : getMenuPosition(rect, coords);
@@ -155,7 +158,7 @@ const useContextMenu = ({
     ref: menuRef,
     role: "menu",
     tabIndex: 0,
-    onContextMenu: (e) => e.preventDefault(),
+    onContextMenu: (e: Event): void => e.preventDefault(),
     "aria-hidden": !isVisible,
   };
   const bindMenuItemProps = {
@@ -175,7 +178,7 @@ const useContextMenu = ({
       coords,
       setCoords,
     },
-  ];
+  ] as const;
 };
 
 export default useContextMenu;

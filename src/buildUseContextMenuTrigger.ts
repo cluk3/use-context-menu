@@ -1,12 +1,15 @@
 import { useRef, useCallback } from "react";
 import { getCoords, isNumber } from "./helpers";
+import { ContextTriggerConfig, Coords } from "./index.d";
 
-const MOUSE_BUTTON = {
-  LEFT: 0,
-  RIGHT: 2,
-};
-const defaultConfig = {
-  collect() {},
+enum MOUSE_BUTTON {
+  LEFT = 0,
+  RIGHT = 2,
+}
+
+const defaultConfig: ContextTriggerConfig = {
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  collect: () => {},
   disable: false,
   disableIfShiftIsPressed: false,
   holdToDisplay: {
@@ -17,8 +20,10 @@ const defaultConfig = {
   posY: 0,
 };
 
-export default function buildUseContextMenuTrigger(triggerVisible) {
-  return (_config = {}) => {
+export default function buildUseContextMenuTrigger(
+  triggerVisible: (coords: Coords, data: unknown) => void
+) {
+  return (_config: Partial<ContextTriggerConfig> = {}): HookResult => {
     const config = Object.assign({}, defaultConfig, _config);
     const holdToDisplay = Object.assign(
       {},
@@ -26,8 +31,8 @@ export default function buildUseContextMenuTrigger(triggerVisible) {
       _config.holdToDisplay
     );
     const touchHandled = useRef(false);
-    const mouseDownTimeoutId = useRef();
-    const touchstartTimeoutId = useRef();
+    const mouseDownTimeoutId = useRef<number>();
+    const touchstartTimeoutId = useRef<number>();
 
     const handleContextClick = useCallback(
       (event) => {
@@ -39,7 +44,10 @@ export default function buildUseContextMenuTrigger(triggerVisible) {
         }
         event.stopPropagation();
 
-        triggerVisible(getCoords(event, config), config.collect());
+        triggerVisible(
+          getCoords(event, [config.posX, config.posY]),
+          config.collect()
+        );
       },
       [config]
     );
@@ -54,9 +62,9 @@ export default function buildUseContextMenuTrigger(triggerVisible) {
           event.persist();
           event.stopPropagation();
 
-          mouseDownTimeoutId.current = setTimeout(
+          mouseDownTimeoutId.current = window.setTimeout(
             () => handleContextClick(event),
-            holdToDisplay.mouse
+            holdToDisplay.mouse as number
           );
         }
       },
@@ -65,7 +73,7 @@ export default function buildUseContextMenuTrigger(triggerVisible) {
 
     const handleMouseUp = useCallback((event) => {
       if (event.button === MOUSE_BUTTON.LEFT) {
-        clearTimeout(mouseDownTimeoutId.current);
+        clearTimeout(mouseDownTimeoutId.current!);
       }
     }, []);
 
@@ -77,10 +85,10 @@ export default function buildUseContextMenuTrigger(triggerVisible) {
           event.persist();
           event.stopPropagation();
 
-          touchstartTimeoutId.current = setTimeout(() => {
+          touchstartTimeoutId.current = window.setTimeout(() => {
             handleContextClick(event);
             touchHandled.current = true;
-          }, holdToDisplay.touch);
+          }, holdToDisplay.touch as number);
         }
       },
       [handleContextClick, holdToDisplay.touch]
@@ -90,7 +98,7 @@ export default function buildUseContextMenuTrigger(triggerVisible) {
       if (touchHandled.current && event.cancelable) {
         event.preventDefault();
       }
-      clearTimeout(touchstartTimeoutId.current);
+      clearTimeout(touchstartTimeoutId.current!);
     }, []);
 
     const handleContextMenu = useCallback(
@@ -126,3 +134,8 @@ export default function buildUseContextMenuTrigger(triggerVisible) {
     return [triggerBind, handleContextClick];
   };
 }
+
+type HookResult = [
+  { onContextMenu: React.EventHandler<React.SyntheticEvent> },
+  React.EventHandler<React.SyntheticEvent>
+];

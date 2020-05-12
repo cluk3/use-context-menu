@@ -4,6 +4,7 @@ module.exports = {
     "eslint:recommended",
     "plugin:react-hooks/recommended",
     "plugin:react/recommended",
+    "prettier",
   ],
   settings: {
     react: {
@@ -19,6 +20,19 @@ module.exports = {
         "plugin:jest-dom/recommended",
         "plugin:testing-library/recommended",
       ],
+    },
+    {
+      files: ["**/*.ts"],
+      parser: "@typescript-eslint/parser",
+      plugins: ["@typescript-eslint"],
+      extends: [
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended",
+        "prettier/@typescript-eslint",
+      ],
+      rules: {
+        "@typescript-eslint/no-non-null-assertion": "off",
+      },
     },
   ],
   env: { browser: true, node: true },
