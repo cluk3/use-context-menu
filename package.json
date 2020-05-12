@@ -7,9 +7,9 @@
   "source": "src/index.ts",
   "types": "dist/index.d.ts",
   "scripts": {
-    "test": "jest",
+    "test": "jest --roots src e2e",
     "example": "parcel ./example/index.html --out-dir exampleDist",
-    "build": "rm -rf ./dist && microbundle -o dist/ --sourcemap false --compress false -f es,cjs",
+    "build": "rm -rf ./dist && microbundle -i src/index.ts -o dist/ --sourcemap false --compress false -f es,cjs",
     "dev": "microbundle watch -o dist/ --sourcemap false --compress false",
     "lint": "eslint \"./**/*.{js,ts}\""
   },

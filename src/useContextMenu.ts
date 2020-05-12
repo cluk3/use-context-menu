@@ -6,8 +6,10 @@ import {
   useState,
 } from "react";
 import { getMenuPosition, getRTLMenuPosition } from "./helpers";
-import buildUseContextMenuTrigger from "./buildUseContextMenuTrigger";
-import { Coords } from "./index.d";
+import buildUseContextMenuTrigger, {
+  UseContextTriggerResult,
+} from "./buildUseContextMenuTrigger";
+import { Coords, ContextTriggerConfig } from "./index.d";
 
 export enum keyCodes {
   ESCAPE = 27,
@@ -31,7 +33,7 @@ const useContextMenu = ({
   rtl = false,
   handleElementSelect = focusElement,
   hideOnScroll = false,
-} = {}) => {
+} = {}): UseContextMenuResult => {
   const menuRef = useRef<HTMLElement>();
   const selectables = useRef<HTMLElement[]>([]);
   // TODO: refactor with useReducer
@@ -158,7 +160,7 @@ const useContextMenu = ({
     ref: menuRef,
     role: "menu",
     tabIndex: 0,
-    onContextMenu: (e: Event): void => e.preventDefault(),
+    onContextMenu: (e: React.SyntheticEvent): void => e.preventDefault(),
     "aria-hidden": !isVisible,
   };
   const bindMenuItemProps = {
@@ -166,6 +168,7 @@ const useContextMenu = ({
     role: "menuitem",
     tabIndex: -1,
   };
+
   return [
     bindMenuProps,
     bindMenuItemProps,
@@ -178,7 +181,44 @@ const useContextMenu = ({
       coords,
       setCoords,
     },
-  ] as const;
+  ];
 };
+
+type BindMenuProps = {
+  style: {
+    position: string;
+    opacity: number;
+    pointerEvents: string;
+    top: number;
+    left: number;
+    userSelect: string;
+    transform: string;
+  };
+  ref: React.MutableRefObject<HTMLElement | undefined>;
+  role: string;
+  tabIndex: number;
+  onContextMenu: (e: React.SyntheticEvent) => void;
+  "aria-hidden": boolean;
+};
+
+type BindMenuItemProps = {
+  ref: (el: HTMLElement) => HTMLElement[];
+  role: string;
+  tabIndex: number;
+};
+
+type UseContextMenuResult = [
+  BindMenuProps,
+  BindMenuItemProps,
+  (config?: Partial<ContextTriggerConfig>) => UseContextTriggerResult,
+  {
+    data: unknown;
+    hideMenu: () => void;
+    isVisible: boolean;
+    setVisible: React.Dispatch<React.SetStateAction<boolean>>;
+    coords: [number, number];
+    setCoords: React.Dispatch<React.SetStateAction<[number, number]>>;
+  }
+];
 
 export default useContextMenu;

@@ -23,7 +23,9 @@ const defaultConfig: ContextTriggerConfig = {
 export default function buildUseContextMenuTrigger(
   triggerVisible: (coords: Coords, data: unknown) => void
 ) {
-  return (_config: Partial<ContextTriggerConfig> = {}): HookResult => {
+  return (
+    _config: Partial<ContextTriggerConfig> = {}
+  ): UseContextTriggerResult => {
     const config = Object.assign({}, defaultConfig, _config);
     const holdToDisplay = Object.assign(
       {},
@@ -112,30 +114,35 @@ export default function buildUseContextMenuTrigger(
       [handleContextClick, config.disable]
     );
 
-    const triggerBind = {
+    const triggerBind: TriggerBind = {
       onContextMenu: handleContextMenu,
     };
     if (holdToDisplay.mouse !== false) {
-      Object.assign(triggerBind, {
-        onMouseDown: handleMouseDown,
-        onMouseUp: handleMouseUp,
-        onMouseOut: handleMouseUp,
-      });
+      triggerBind.onMouseDown = handleMouseDown;
+      triggerBind.onMouseUp = handleMouseUp;
+      triggerBind.onMouseOut = handleMouseUp;
     }
     if (holdToDisplay.touch !== false) {
-      Object.assign(triggerBind, {
-        onTouchStart: handleTouchstart,
-        onTouchEnd: handleTouchEnd,
-        onTouchCancel: handleTouchEnd,
-        onTouchMove: handleTouchEnd,
-      });
+      triggerBind.onTouchStart = handleTouchstart;
+      triggerBind.onTouchEnd = handleTouchEnd;
+      triggerBind.onTouchCancel = handleTouchEnd;
+      triggerBind.onTouchMove = handleTouchEnd;
     }
 
     return [triggerBind, handleContextClick];
   };
 }
-
-type HookResult = [
-  { onContextMenu: React.EventHandler<React.SyntheticEvent> },
+type TriggerBind = {
+  onContextMenu: React.EventHandler<React.SyntheticEvent>;
+  onMouseDown?: React.EventHandler<React.SyntheticEvent>;
+  onMouseUp?: React.EventHandler<React.SyntheticEvent>;
+  onMouseOut?: React.EventHandler<React.SyntheticEvent>;
+  onTouchStart?: React.EventHandler<React.SyntheticEvent>;
+  onTouchEnd?: React.EventHandler<React.SyntheticEvent>;
+  onTouchCancel?: React.EventHandler<React.SyntheticEvent>;
+  onTouchMove?: React.EventHandler<React.SyntheticEvent>;
+};
+export type UseContextTriggerResult = [
+  TriggerBind,
   React.EventHandler<React.SyntheticEvent>
 ];
