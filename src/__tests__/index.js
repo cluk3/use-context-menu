@@ -1,6 +1,11 @@
 import { renderHook, act } from "@testing-library/react-hooks";
 import useContextMenu, { keyCodes } from "../useContextMenu";
 
+const getMenuRefMock = () => ({
+  getBoundingClientRect: jest.fn(() => ({ height: 100, width: 100 })),
+  contains: jest.fn(() => false),
+});
+
 test("useContextMenu result is correct", () => {
   const { result } = renderHook(() => useContextMenu());
 
@@ -9,13 +14,11 @@ test("useContextMenu result is correct", () => {
   expect(result.current).toMatchSnapshot();
 });
 
-test("useContextMenu register event listeners only when visible", () => {
+test("useContextMenu registers event listeners only when visible", () => {
   const addEventListener = jest.spyOn(document, "addEventListener");
   const { result } = renderHook(() => useContextMenu());
 
-  result.current[0].ref.current = {
-    getBoundingClientRect: jest.fn(() => ({ height: 100, width: 100 }))
-  };
+  result.current[0].ref.current = getMenuRefMock();
 
   expect(addEventListener).not.toHaveBeenCalled();
 
@@ -24,107 +27,54 @@ test("useContextMenu register event listeners only when visible", () => {
     result.current[3].setCoords([100, 100]);
   });
 
-  expect(addEventListener).toHaveBeenCalledTimes(5);
-  expect(addEventListener.mock.calls.map(call => call[0])).toEqual([
+  expect(addEventListener).toHaveBeenCalledTimes(3);
+  expect(addEventListener.mock.calls.map((call) => call[0])).toEqual([
     "mousedown",
     "touchstart",
-    "scroll",
-    "contextmenu",
-    "keydown"
+    "keydown",
   ]);
 });
 
 test("useContextMenu sets correctly the style when changing visibility", () => {
   const { result } = renderHook(() => useContextMenu());
 
-  result.current[0].ref.current = {
-    getBoundingClientRect: jest.fn(() => ({ height: 100, width: 100 }))
-  };
+  result.current[0].ref.current = getMenuRefMock();
 
-  expect(result.current[0].style).toEqual({
-    opacity: 0,
-    pointerEvents: "none",
-    position: "fixed"
-  });
+  expect(result.current[0].style).toMatchSnapshot();
 
   act(() => {
     result.current[3].setVisible(true);
     result.current[3].setCoords([100, 100]);
   });
 
-  expect(result.current[0].style).toEqual({
-    left: "100px",
-    opacity: 1,
-    pointerEvents: "auto",
-    position: "fixed",
-    top: "100px"
-  });
+  expect(result.current[0].style).toMatchSnapshot();
 
   act(() => {
     result.current[3].setVisible(false);
   });
 
-  expect(result.current[0].style).toEqual({
-    opacity: 0,
-    pointerEvents: "none",
-    position: "fixed"
-  });
+  expect(result.current[0].style).toMatchSnapshot();
 });
 
 test("useContextMenu keeps the menu inside the viewport", () => {
   const { result } = renderHook(() => useContextMenu());
 
-  result.current[0].ref.current = {
-    getBoundingClientRect: jest.fn(() => ({ height: 100, width: 100 }))
-  };
+  result.current[0].ref.current = getMenuRefMock();
 
-  expect(result.current[0].style).toEqual({
-    opacity: 0,
-    pointerEvents: "none",
-    position: "fixed"
-  });
+  expect(result.current[0].style).toMatchSnapshot();
 
   act(() => {
     result.current[3].setVisible(true);
     result.current[3].setCoords([1000, 700]);
   });
 
-  expect(result.current[0].style).toEqual({
-    left: "900px",
-    opacity: 1,
-    pointerEvents: "auto",
-    position: "fixed",
-    top: "600px"
-  });
-});
-
-test("useContextMenu hides the menu when a new contextmenu event is triggered", () => {
-  const { result } = renderHook(() => useContextMenu());
-
-  result.current[0].ref.current = {
-    getBoundingClientRect: jest.fn(() => ({ height: 100, width: 100 }))
-  };
-
-  act(() => {
-    result.current[3].setVisible(true);
-  });
-
-  act(() => {
-    const event = new MouseEvent("contextmenu");
-
-    document.dispatchEvent(event);
-  });
-
-  expect(result.current[3].isVisible).toEqual(false);
+  expect(result.current[0].style).toMatchSnapshot();
 });
 
 test("useContextMenu hides the menu when clicking outside", () => {
   const { result } = renderHook(() => useContextMenu());
 
-  result.current[0].ref.current = {
-    getBoundingClientRect: jest.fn(() => ({ height: 100, width: 100 })),
-    contains: () => false
-  };
+  result.current[0].ref.current = getMenuRefMock();
 
   act(() => {
     result.current[3].setVisible(true);
@@ -139,13 +89,10 @@ test("useContextMenu hides the menu when clicking outside", () => {
   expect(result.current[3].isVisible).toEqual(false);
 });
 
-test("useContextMenu hides the menu when clicking outside", () => {
+test("useContextMenu hides the menu when touching outside", () => {
   const { result } = renderHook(() => useContextMenu());
 
-  result.current[0].ref.current = {
-    getBoundingClientRect: jest.fn(() => ({ height: 100, width: 100 })),
-    contains: () => false
-  };
+  result.current[0].ref.current = getMenuRefMock();
 
   act(() => {
     result.current[3].setVisible(true);
@@ -160,13 +107,10 @@ test("useContextMenu hides the menu when clicking outside", () => {
   expect(result.current[3].isVisible).toEqual(false);
 });
 
-test("useContextMenu hides the menu on scroll", () => {
-  const { result } = renderHook(() => useContextMenu());
+test("useContextMenu hides the menu on scroll when specified", () => {
+  const { result } = renderHook(() => useContextMenu({ hideOnScroll: true }));
 
-  result.current[0].ref.current = {
-    getBoundingClientRect: jest.fn(() => ({ height: 100, width: 100 })),
-    contains: () => false
-  };
+  result.current[0].ref.current = getMenuRefMock();
 
   act(() => {
     result.current[3].setVisible(true);
@@ -182,10 +126,7 @@ test("useContextMenu hides the menu on scroll", () => {
 test("useContextMenu hides the menu on ESCAPE key press", () => {
   const { result } = renderHook(() => useContextMenu());
 
-  result.current[0].ref.current = {
-    getBoundingClientRect: jest.fn(() => ({ height: 100, width: 100 })),
-    contains: () => false
-  };
+  result.current[0].ref.current = getMenuRefMock();
 
   act(() => {
     result.current[3].setVisible(true);
@@ -202,10 +143,7 @@ test("useContextMenu hides the menu on ESCAPE key press", () => {
 test("useContextMenu hides the menu on ENTER key press", () => {
   const { result } = renderHook(() => useContextMenu());
 
-  result.current[0].ref.current = {
-    getBoundingClientRect: jest.fn(() => ({ height: 100, width: 100 })),
-    contains: () => false
-  };
+  result.current[0].ref.current = getMenuRefMock();
 
   act(() => {
     result.current[3].setVisible(true);
@@ -223,14 +161,11 @@ test("useContextMenu index of item selected by keyboard gets reset when closing 
   let selectedEl = 0;
   const { result } = renderHook(() =>
     useContextMenu({
-      handleElementSelect: _selectedEl => (selectedEl = _selectedEl)
+      handleElementSelect: (_selectedEl) => (selectedEl = _selectedEl),
     })
   );
 
-  result.current[0].ref.current = {
-    getBoundingClientRect: jest.fn(() => ({ height: 100, width: 100 })),
-    contains: () => false
-  };
+  result.current[0].ref.current = getMenuRefMock();
 
   result.current[1].ref(1);
   result.current[1].ref(2);
@@ -263,4 +198,48 @@ test("useContextMenu index of item selected by keyboard gets reset when closing 
   });
 
   expect(selectedEl).toEqual(1);
+});
+
+describe("useContextTrigger", () => {
+  it("matches snapshot when giving no config", () => {
+    const { result } = renderHook(() => useContextMenu());
+
+    const [, , useContextTrigger] = result.current;
+
+    const { result: contextTriggerResult } = renderHook(() =>
+      useContextTrigger()
+    );
+
+    expect(contextTriggerResult.current).toMatchSnapshot();
+  });
+  it("matches snapshot when setting mouse holdToDisplay", () => {
+    const { result } = renderHook(() => useContextMenu());
+
+    const [, , useContextTrigger] = result.current;
+
+    const { result: contextTriggerResult } = renderHook(() =>
+      useContextTrigger({
+        holdToDisplay: {
+          mouse: 1000,
+        },
+      })
+    );
+
+    expect(contextTriggerResult.current).toMatchSnapshot();
+  });
+  it("matches snapshot when setting touch holdToDisplay", () => {
+    const { result } = renderHook(() => useContextMenu());
+
+    const [, , useContextTrigger] = result.current;
+
+    const { result: contextTriggerResult } = renderHook(() =>
+      useContextTrigger({
+        holdToDisplay: {
+          touch: 1000,
+        },
+      })
+    );
+
+    expect(contextTriggerResult.current).toMatchSnapshot();
+  });
 });

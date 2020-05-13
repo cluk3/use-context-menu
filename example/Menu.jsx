@@ -1,16 +1,16 @@
 import React from "react";
 
-const Menu = props => {
+const Menu = (props) => {
   const {
     bindMenu,
     data,
     bindMenuItem,
     coords,
     setClickedCmd,
-    hideMenu
+    hideMenu,
   } = props;
 
-  const handleMenuItemClick = n => () => {
+  const handleMenuItemClick = (n) => () => {
     setClickedCmd(n);
     hideMenu();
   };
@@ -24,11 +24,7 @@ const Menu = props => {
       <p>Enter will trigger an onClick</p>
       <p>Esc will close the menu</p>
       <hr />
-      <p
-        {...bindMenuItem}
-        onFocus={() => console.log("focused")}
-        onClick={handleMenuItemClick("first")}
-      >
+      <p {...bindMenuItem} onClick={handleMenuItemClick("first")}>
         First command
       </p>
       <p {...bindMenuItem} onClick={handleMenuItemClick("second")}>

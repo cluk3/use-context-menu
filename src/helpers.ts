@@ -1,7 +1,18 @@
-export const getMenuPosition = (rect, [x, y]) => {
+import { TouchEvent, MouseEvent } from "react";
+import { Coords } from "./index.d";
+
+export type GetPositionFunc = (
+  rect: ClientRect,
+  coords: [number, number]
+) => {
+  top: number;
+  left: number;
+};
+
+export const getMenuPosition: GetPositionFunc = (rect, [x, y]) => {
   const menuStyles = {
     top: y,
-    left: x
+    left: x,
   };
 
   const { innerWidth, innerHeight } = window;
@@ -27,10 +38,10 @@ export const getMenuPosition = (rect, [x, y]) => {
   return menuStyles;
 };
 
-export const getRTLMenuPosition = (rect, [x, y]) => {
+export const getRTLMenuPosition: GetPositionFunc = (rect, [x, y]) => {
   const menuStyles = {
     top: y,
-    left: x
+    left: x,
   };
 
   const { innerWidth, innerHeight } = window;
@@ -59,10 +70,18 @@ export const getRTLMenuPosition = (rect, [x, y]) => {
   return menuStyles;
 };
 
-export const getCoords = (event, config) =>
-  ["X", "Y"].map(
-    axis =>
-      (event[`client${axis}`] ||
-        (event.touches && event.touches[0][`page${axis}`])) -
-      config[`pos${axis}`]
-  );
+export const getCoords = (
+  event: TouchEvent | MouseEvent,
+  [posX, posY]: Coords
+): Coords => {
+  return [
+    (event as MouseEvent).clientX ||
+      ((event as TouchEvent).touches &&
+        (event as TouchEvent).touches[0].pageX) - posY,
+    (event as MouseEvent).clientY ||
+      ((event as TouchEvent).touches &&
+        (event as TouchEvent).touches[0].pageY) - posX,
+  ];
+};
+
+export const isNumber = (x: unknown): x is number => typeof x === "number";
