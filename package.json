@@ -33,7 +33,7 @@
     "@babel/preset-env": "^7.9.6",
     "@testing-library/react-hooks": "^1.1.0",
     "babel-jest": "^26.0.1",
-    "jest": "^26.0.1",
+    "jest": "^27.0.4",
     "microbundle": "^0.12.0",
     "np": "^6.2.3",
     "parcel-bundler": "^1.12.4",
